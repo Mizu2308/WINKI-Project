@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Movie } from './movie.entity';
 
@@ -8,15 +8,18 @@ export class Review {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => User, (user) => user.id)
+    @Column({ type: 'float' })
+    rating: number; // Điểm đánh giá (0-10)
+
+    @Column({ type: 'text', nullable: true })
+    comment: string; // Bình luận
+
+    @ManyToOne(() => User, (user) => user.reviews, { onDelete: 'CASCADE' })
     user: User;
 
-    @ManyToOne(() => Movie, (movie) => movie.id)
+    @ManyToOne(() => Movie, (movie) => movie.reviews, { onDelete: 'CASCADE' })
     movie: Movie;
 
-    @Column()
-    rating: number;
-
-    @Column({ nullable: true })
-    comment: string;
+    @CreateDateColumn()
+    createdAt: Date;
 }

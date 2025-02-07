@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Review } from './review.entity';
 
 @Entity()
 export class User {
@@ -14,6 +15,9 @@ export class User {
 
     @Column({ default: 'user' }) // Mặc định user sẽ có vai trò 'user', admin cần chỉnh sửa thủ công trong DB
     role: string;
+
+    @OneToMany(() => Review, (review) => review.user)
+    reviews: Review[];
 
     async hashPassword(): Promise<void> {
         this.password = await bcrypt.hash(this.password, 10);
