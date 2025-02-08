@@ -21,7 +21,6 @@ export class ReviewsService {
   ) {}
 
   async addReview(userId: number, body: CreateReviewDto) {
-    console.log(body);
     const { movieId, rating, comment } = body;
 
     if (rating < 0 || rating > 10) {

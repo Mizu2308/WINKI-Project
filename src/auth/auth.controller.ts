@@ -1,12 +1,23 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Inject,
+  UnauthorizedException,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { JwtAuthGuard } from 'src/helper/auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @Post('register')
@@ -20,6 +31,27 @@ export class AuthController {
       body.username,
       body.password,
     );
-    return this.authService.login(user);
+
+    const existingToken = await this.cacheManager.get(
+      `user_session_${user.id}`,
+    );
+
+    if (existingToken) {
+      throw new UnauthorizedException('Bạn đã đăng nhập trên thiết bị khác.');
+    }
+
+    const accessToken = await this.authService.login(user);
+
+    await this.cacheManager.set(`user_session_${user.id}`, accessToken, 86400);
+
+    return accessToken;
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(@Request() req) {
+    const userId = req.user.userId;
+    await this.cacheManager.del(`user_session_${userId}`);
+    return { message: 'Đăng xuất thành công' };
   }
 }
