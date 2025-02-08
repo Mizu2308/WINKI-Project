@@ -7,8 +7,8 @@ import { Movie } from 'src/entities/movie.entity';
 import { User } from 'src/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Review, Movie, User])], // Đảm bảo import các entity cần thiết
+  imports: [TypeOrmModule.forFeature([Review, Movie, User])],
   controllers: [ReviewsController],
   providers: [ReviewsService],
 })
-export class ReviewsModule { }
+export class ReviewsModule {}

@@ -17,7 +17,7 @@ import { ReviewsModule } from './reviews/reviews.module';
       password: process.env.DATABASE_PASSWORD || '12345678',
       database: process.env.DATABASE_NAME || 'movie_review',
       autoLoadEntities: true,
-      entities: ["src/entity/**/*.entity{.ts,.js}"],
+      entities: ['src/entity/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     UsersModule,
@@ -26,4 +26,4 @@ import { ReviewsModule } from './reviews/reviews.module';
     ReviewsModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
