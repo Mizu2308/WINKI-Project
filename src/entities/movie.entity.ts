@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Review } from './review.entity';
+import { MovieStatus } from 'src/movies/movies.enum';
 
 @Entity()
 export class Movie {
@@ -20,6 +21,12 @@ export class Movie {
 
   @Column({ nullable: true })
   director!: string;
+
+  @Column({ enum: MovieStatus, default: MovieStatus.COMING_SOON })
+  status!: MovieStatus;
+
+  @Column({ nullable: true })
+  url?: string;
 
   @Column({ nullable: true })
   releaseYear!: number;

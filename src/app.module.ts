@@ -11,7 +11,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DATABASE_HOST || 'localhost',
+      host: process.env.DATABASE_HOST || 'db',
       port: Number(process.env.DATABASE_PORT) || 5432,
       username: process.env.DATABASE_USER || 'postgres',
       password: process.env.DATABASE_PASSWORD || '12345678',

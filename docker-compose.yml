@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: nest_app
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - minio
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    volumes:
+      - ./src:/usr/src/app/src
+    command: npm run start:dev
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: movie_review
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    ports:
+      - '9000:9000'
+      - '9090:9090'
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9090"
+
+volumes:
+  pg_data:
+  minio_data:
